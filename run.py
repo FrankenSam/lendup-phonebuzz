@@ -12,7 +12,7 @@ callers = {
 	"+14085108793": "Sam",
 	}
 
-site_url = "samzlin.pythonanywhere.com"
+site_url = "https://samzlin.pythonanywhere.com"
 twilio_number = "+16509665991"
 
 
