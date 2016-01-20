@@ -2,23 +2,19 @@ from flask import Flask, request, redirect, render_template, flash
 from twilio.rest import TwilioRestClient
 import twilio.twiml
 from flask.ext.wtf import Form
-from wtforms import TextField
-from wtforms.validators import Required, Length, ValidationError
+from wtforms import TextField, validators
 import os
 from twilio.util import TwilioCapability
 
 app = Flask(__name__)
 
-
-
-
 callers = {
-	"+14085108793": "Jo",
+	"+14085108793": "Sam",
 	}
 
-site_url = "http://e0c97f2d.ngrok.io/"
+site_url = "samzlin.pythonanywhere.com"
 twilio_number = "+16509665991"
-my_number = "+14085108793"
+
 
 def fizzbuzz(value):
 	output = ""
@@ -35,7 +31,6 @@ def fizzbuzz(value):
 	return output
 
 
-
 def make_call(phoneNo):
 	resp = twilio.twiml.Response()
 	account_sid = 'ACe84df508961b0a4fc3e87dfe1de3077b'	
@@ -45,24 +40,22 @@ def make_call(phoneNo):
 	#make the call
 	make_call = client.calls.create(to=phoneNo, from_=twilio_number, url=site_url)
 
-	print make_call.account_sid
+	#print makecall.account_sid
 	return "Sucess"
 
+#Checks whether entered phone number is valid
+"""def checkValid(form, phoneNumber):
+  to_check = str(phoneNumber)
+  to_check = (to_check[1:13])
 
-def isValid(form, phoneNumber):
-  rawTextField = str(phoneNumber)
-  valueDesiredString = "value="
-  valueIndex = rawTextField.index(valueDesiredString) +6
-  numStr = rawTextField[valueIndex:len(rawTextField)-1]
-  numStr = (numStr[1:13])
-  print(numStr)
-  print(len(numStr))
-  if len(numStr)!= 12 or numStr[0] != "+" or not str.isdigit(numStr[1:13]):
-      raise ValidationError("Your phone number isn't a valid US/Canada number")
+  if  not str.isdigit(to_check[1:13]) or to_check[0] != "+" or len(to_check)!= 12:
+      raise validators.ValidationError("Your phone number is not valid")"""
 
+#creates from with WTform
 class MySite(Form):
 	failedCall = False
-	phoneNumber = TextField('phoneNumber', validators=[Required(), Length(min=12, max=12), isValid])
+	phoneNumber = TextField('phoneNumber', [validators.Required(), validators.Length(min=12, max=12)])
+
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_monkey():
@@ -106,15 +99,15 @@ def handle_key():
 		resp.say("The call failed, or the remote party hung up. Goodbye.", voice="alice", language="en-CA")
 		return redirect("/")
 
-
+#renders web application 
 @app.route("/app/", methods=['GET', 'POST'])
-def callRoute(failedCall=False):
+def renderSite(failedCall=False):
   resp = twilio.twiml.Response()
   form = MySite(request.form, failedCall=failedCall, csrf_enabled = False)
   if form.validate_on_submit():
       return make_call(form.data['phoneNumber'])
   return render_template('mysite.html',
-        title = 'Enter A Phone Number starting with country code +1',
+        title = 'phonebuzz',
         form = form)
 
 if __name__ == "__main__":

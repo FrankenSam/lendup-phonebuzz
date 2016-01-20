@@ -3,19 +3,13 @@
     <head>
         <title>Lendup Fizzbuzz</title>
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <style type="text/css">
-            .container {
-             max-width: 500px;
-             padding-top: 100px;
-            }
-        </style>
     </head>
     <body>
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <div class="container">
           {% block content %}
-          <h1>Enter a valid US/Canda Number in the form "+1..."</h1>
+          <h1>Lets Play Fizz Buzz!</h1>
           <form action="" method="POST" name="login">
             {{form.hidden_tag()}}
             <p>
@@ -25,8 +19,8 @@
               {% if form.phoneNumber.errors %}
                 <h3 class="errors">{% for error in form.phoneNumber.errors %}<h4><strong>{{ error }}</h4>{% endfor %}</h3>
               {% endif %}
-              <h5>Enter a Valid US/Canada Number, starting with "+1":</h5><br>
-              {{form.phoneNumber(size=80)}}<br>
+              <h4>Please enter a valid phone number beginning with +1:</h4><br>
+              {{form.phoneNumber(size=50)}}<br>
             </p>
             <p><input type="submit" value="Submit"></p>
           </form>
